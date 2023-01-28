@@ -1,0 +1,6 @@
+[submodule "TUP2023-Sentry-Framework"]
+	path = TUP2023-Sentry-Framework
+	url = git@github.com:tup-robomaster/TUP2023-Sentry-Framework.git
+[submodule "TUP2023-Sentry-Nav"]
+	path = TUP2023-Sentry-Nav
+	url = git@github.com:tup-robomaster/TUP2023-Sentry-Nav.git
