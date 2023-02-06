@@ -4,3 +4,6 @@
 [submodule "TUP2023-Sentry-Nav"]
 	path = TUP2023-Sentry-Nav
 	url = git@github.com:tup-robomaster/TUP2023-Sentry-Nav.git
+[submodule "TUP-Vision-2023-Based"]
+	path = TUP-Vision-2023-Based
+	url = git@github.com:tup-robomaster/TUP-Vision-2023-Based.git
