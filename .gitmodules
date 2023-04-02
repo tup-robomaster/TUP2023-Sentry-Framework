@@ -7,3 +7,9 @@
 [submodule "TUP-Vision-2023-Based"]
 	path = TUP-Vision-2023-Based
 	url = git@github.com:tup-robomaster/TUP-Vision-2023-Based.git
+[submodule "JsonFileBased_RobotDecision"]
+	path = JsonFileBased_RobotDecision
+	url = git@github.com:tup-robomaster/JsonFileBased_RobotDecision.git
+[submodule "TUP2023-Sentry-Perception"]
+	path = TUP2023-Sentry-Perception
+	url = git@github.com:tup-robomaster/TUP2023-Sentry-Perception.git
