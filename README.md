@@ -3,28 +3,29 @@
 
 ## 1.简介
 本套框架是沈阳航空航天大学TUP战队2023赛季哨兵程序框架。本框架基于ROS2 Galactic开发,各模块间高度解耦，方便开发维护。
+
+该分支为LIO分支，目前仍在开发中。
 ## 2.软件环境
 
 |软件|安装方式|版本|
 |---|---|---|
 |Ubuntu|编译安装(实时内核)|20.04 LTS + Real-Time Kernel|
+|CMake|编译安装|3.22|
 |OpenVINO™ toolkit|编译安装|2022.3 LTS|
 |ROS2|apt安装|Galactic|
 |OpenCV|编译安装/apt安装|4.6.0|
 |Ceres|编译安装|2.1.0|
 |Eigen|编译安装|3.4.0|
+|depthai-core|编译安装|2.21.2|
+|matplotlib-cpp|编译安装|N/A|
 
 ## 3. 硬件方案
 ### 3.1 传感器
 |传感器|类型|数量|作用|
 |---|---|---|---|
-|OAK-D-PRO-W|深度相机|1|导航/全向感知|
+|MID360|激光雷达|1|导航|
 |大恒MER-139|工业相机|1|自瞄|
-|KS2A543|USB摄像头|3|全向感知|
-### 3.2 计算平台
-经过我们的测试，SLAM任务和自瞄任务对系统资源的占用均较大，将这两个任务放在一台设备上运行并不现实。因此我们在哨兵上安装了两台NUC，分别运行我们的导航与自瞄程序。两台NUC通过一台交换机进行组网，通过网线进行通讯。上位机可以通过采用接入交换机方式来使用局域网访问两台下位机，方便调试。
-<img src="pic/network.png" width="50%" height="50%" />
-
+|KS2A543|USB摄像头|4|全向感知|
 ## 4.软件设计
 ### 4.1 简介
 哨兵程序基于ROS2 Galactic进行开发.
@@ -82,3 +83,58 @@
 |62-63|CRC16|
 
 ### RX:
+
+## 6.使用教程
+
+### 6.1 建图
+要使用导航模块，你需要首先建立场地的地图
+- 八叉树地图 - 用于重定位
+- 点云地图 - 用于后续生成2.5D高程地图
+- 2.5D高程地图 - 用于生成栅格地图
+- 栅格地图 - 用于作为导航的全局地图
+
+### 6.1.1 八叉树地图
+```bash
+cd scripts
+bash octo_mapping.sh
+```
+使用该命令以启动八叉树建图，可以打开rviz2观看建图效果
+当完成建图后，在工作空间下打开新终端使用以下命令保存地图
+```bash
+source install/setup.bash
+ros2 launch octomap_server octomap_saver.launch.xml
+```
+### 6.1.2 点云地图
+该步骤与八叉树建图同时进行
+在工作空间下打开新终端使用以下命令保存地图
+```bash
+source install/setup.bash
+ros2 service call /lio_sam/save_map lio_sam/srv/SaveMap
+```
+### 6.1.3 2.5D高程地图与栅格地图
+该步骤应在上面两步完成后进行
+
+修改`TUP2023-Sentry-Nav/grid_map/grid_map_demos/config/pcd_to_gridmap_demo.yaml`中参数以符合你的需求
+```yaml
+pcd_to_gridmap:
+  ros__parameters:
+    #PCD地图路径
+    pcd_file_path: "/home/tup/Downloads/LOAM/GlobalMap.pcd"
+    #建图frame_id
+    map_frame_id: "map"
+    #滤波相关参数
+    filters:
+        ...
+```
+完成配置后启动程序
+```bash
+source install/setup.bash
+ros2 launch grid_map_demos pcd_to_gridmap_demo_launch
+```
+在该配置下，程序运行后将自动打开rviz，你可以看到`/elevation_grid`,`slope_grid`
+Topic下的栅格地图.
+使用类似以下命令的以保存地图.
+```bash
+ros2 run nav2_map_server map_saver_cli -f your_map_name -t /your_map_topic_name
+```
+如果你需要pcd点云如翻转，平移，滤波之类的预处理，你可以修改`TUP2023-Sentry-Nav/grid_map/grid_map_demos/config/pcl_grid_config.yaml`中的配置以满足你的需求。
