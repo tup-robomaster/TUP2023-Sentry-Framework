@@ -93,17 +93,19 @@
 - 2.5D高程地图 - 用于生成栅格地图
 - 栅格地图 - 用于作为导航的全局地图
 
-### 6.1.1 八叉树地图
 ```bash
 cd scripts
 bash octo_mapping.sh
 ```
-使用该命令以启动八叉树建图，可以打开rviz2观看建图效果
-当完成建图后，在工作空间下打开新终端使用以下命令保存地图
+使用该命令以启动建图，可以打开rviz2观看建图效果
+### 6.1.1 八叉树地图
+当完成建图后，在工作空间下打开新终端使用以下命令保存八叉树地图
 ```bash
 source install/setup.bash
 ros2 launch octomap_server octomap_saver.launch.xml
 ```
+可使用octovis查看八叉树地图
+<img src="pic/octo_map.png"/>
 ### 6.1.2 点云地图
 该步骤与八叉树建图同时进行
 在工作空间下打开新终端使用以下命令保存地图
@@ -111,8 +113,10 @@ ros2 launch octomap_server octomap_saver.launch.xml
 source install/setup.bash
 ros2 service call /lio_sam/save_map lio_sam/srv/SaveMap
 ```
+<img src="pic/pcd_map.png"/>
+
 ### 6.1.3 2.5D高程地图与栅格地图
-该步骤应在上面两步完成后进行
+该步骤应在上面两步完成后进行，生成的地图将用于机器人导航
 
 修改`TUP2023-Sentry-Nav/grid_map/grid_map_demos/config/pcd_to_gridmap_demo.yaml`中参数以符合你的需求
 ```yaml
@@ -126,15 +130,24 @@ pcd_to_gridmap:
     filters:
         ...
 ```
+
+如果你需要pcd点云如翻转，平移，滤波之类的预处理，你可以修改`TUP2023-Sentry-Nav/grid_map/grid_map_demos/config/pcl_grid_config.yaml`中的配置以满足你的需求。
+
 完成配置后启动程序
 ```bash
 source install/setup.bash
 ros2 launch grid_map_demos pcd_to_gridmap_demo_launch
 ```
-在该配置下，程序运行后将自动打开rviz，你可以看到`/elevation_grid`,`slope_grid`
+以下为`height_layer`为`elevation`，`color_layer`为`slope_grid`生成的2.5D高程地图
+<img src="pic/slope_grid_map.png"/>
+
+
+在该配置下，可自打开rviz，你可以看到`/elevation_grid`, `slope_grid`
 Topic下的栅格地图.
+<img src="pic/slope_grid_map_2d.png"/>
 使用类似以下命令的以保存地图.
 ```bash
 ros2 run nav2_map_server map_saver_cli -f your_map_name -t /your_map_topic_name
 ```
-如果你需要pcd点云如翻转，平移，滤波之类的预处理，你可以修改`TUP2023-Sentry-Nav/grid_map/grid_map_demos/config/pcl_grid_config.yaml`中的配置以满足你的需求。
+以下为使用`slope_grid`生成的2d栅格地图，可使用GIMP稍加修改离群像素，之后便可直接用于nav2导航
+<img src="pic/tunnel.png"/>
