@@ -10,5 +10,5 @@ for cmd in "${cmds[@]}";
 do
 echo Current CMD : "$cmd"
 gnome-terminal -- bash -c "  source /opt/ros/galactic/setup.bash;cd $(pwd);source install/setup.bash;$cmd;exec bash;"
-sleep 0.2
+sleep 0.5
 done
