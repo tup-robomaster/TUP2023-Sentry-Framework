@@ -19,7 +19,6 @@
 |OpenCV|编译安装|apt安装|4.6.0|
 |Ceres|编译安装|2.1.0|
 |Eigen|编译安装|3.4.0|
-|depthai-core|编译安装|2.21.2|
 |matplotlib-cpp|编译安装|N/A|
 
 ## 3. 硬件方案
@@ -36,7 +35,7 @@ NUC和Mid360之间经交换机连接，方便接入上位机组网调试
 ## 4.软件设计
 ### 4.1 简介
 哨兵程序基于ROS2 Galactic进行开发.
-参考RMOSS的设计模式，我们将系统分为以下三层:`Task Layer`, `Interface Layer`,`Hardware Layer`.
+参考RMOSS的设计模式，我们将系统分为以下三层:`Task Layer`, `Interface Layer`, `Hardware Layer`.
 - **Task Layer**:该层主要分为四个模块:
 `Autoaim`为自瞄模块，负责探测敌人并进行击打。
 `Decision`为决策模块，负责综合目前可以获得到的各种信息，决定下一个所需前往下一个路径点，下一个击打模板与车辆的模式。
