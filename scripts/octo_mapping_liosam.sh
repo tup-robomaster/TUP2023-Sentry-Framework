@@ -3,7 +3,7 @@ cd ../../..
 cmds=(" ros2 launch livox_ros_driver2 rviz_MID360_launch.py"
 	"ros2 launch imu_complementary_filter complementary_filter.launch.py"
 	"ros2 launch lio_sam run.launch.py"
-	"ros2 launch octomap_server octomap_mapping.launch.xml"
+	"ros2 launch octomap_server octomap_mapping_liosam.launch.xml"
 	)
 # OAK
 for cmd in "${cmds[@]}";
